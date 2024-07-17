@@ -1,4 +1,7 @@
-### This is still under construction, The command usage might change. Right now its not usefull. 
+### This is still under construction, The command usage might change. Right now its not usefull
+
+## I am working on Zig version too here <https://github.com/khushal123/procfill-zig.git>
+
 # Procfill
 
 `procfill` (alias: `pf`) is a command-line tool written in Rust for managing processes. It allows you to create, kill, and track logs of processes with ease.
@@ -50,8 +53,3 @@ procfill kill <pid>
 # or
 pf kill <pid>
 ```
-
-
-
-
-
