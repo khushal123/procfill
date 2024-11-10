@@ -4,6 +4,7 @@ use std::{
 };
 
 pub fn read_input_file(filename: &str) -> Vec<String> {
+    println!("{}", filename);
     let file = File::open(filename).expect("file not found");
     let reader = BufReader::new(file);
     let mut contents: Vec<String> = Vec::new();

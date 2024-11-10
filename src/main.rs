@@ -1,20 +1,16 @@
 mod extract;
-use extract::Action;
+mod bootstrap;
 mod commands;
-mod utils;
 mod pm;
-// mod dirutil;
+mod tasks;
+mod utils;
+use extract::Action;
 
 // mod procutils;
 // mod start;
 
 fn main() {
-    // dirutil::create_dirs();
-    // procutils::stop_all_processes();
-    // for port in procutils::PORT_LIST {
-    //     println!("Starting process on port {}", port);
-    //     // procutils::create_command(port)
-    // }
+    bootstrap::start();
     let args: Vec<String> = std::env::args().collect();
     run(args);
 }
@@ -27,5 +23,5 @@ fn run(args: Vec<String>) {
     let action: Action = extract::parse_command(&args[index]);
     let index = 2;
     let arguments = args[index..].to_vec();
-    action.get_runner(arguments);
+    action.start_runner(arguments);
 }

@@ -1,0 +1,18 @@
+config-dir: ~/.procfil/
+data-dir: ~/.procfil/data
+log-dir: ~/.procfil/logs
+
+commands:
+  options:
+    save_output: true
+    run_parallel: true
+  tasks:
+    - name: "list"
+      command: "ls"
+      dir: /home/ksc/dev/rust/procfill/data/
+      args: []
+
+    - name: "node-server"
+      dir: /home/ksc/dev/rust/procfill/data/
+      command: "node"
+      args: ["server.js"]

@@ -11,7 +11,7 @@ pub enum Action {
 }
 
 impl Action {
-    pub fn get_runner(&self, arguments: Vec<String>) {
+    pub fn start_runner(&self, arguments: Vec<String>) {
         match self {
             Action::Help => {
                 println!("Help {}", arguments.len());
@@ -20,10 +20,12 @@ impl Action {
                 commands::start::run(arguments);
             }
             Action::Log => {
-                commands::kill::run(arguments);
+                // commands::kill::run(arguments);
+                println!("Log {}", arguments.len());
             }
             Action::Kill => {
-                commands::kill::run(arguments);
+                // commands::kill::run(arguments);
+                println!("Kill {}", arguments.len());
             }
             Action::Pause => {
                 println!("Pause {}", arguments.len());
