@@ -1,6 +1,6 @@
-mod extract;
 mod bootstrap;
 mod commands;
+mod extract;
 mod pm;
 mod tasks;
 mod utils;

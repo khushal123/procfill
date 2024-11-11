@@ -1,6 +1,8 @@
-config-dir: ~/.procfil/
-data-dir: ~/.procfil/data
-log-dir: ~/.procfil/logs
+# these 3 options are not usefull right now. reserved for future use 
+
+config-dir: procfil/ 
+data-dir: procfil/data
+log-dir: procfil/logs
 
 commands:
   options:
@@ -10,9 +12,9 @@ commands:
     - name: "list"
       command: "ls"
       dir: /home/ksc/dev/rust/procfill/data/
-      args: []
+      args: ["-lch"]
 
-    - name: "node-server"
-      dir: /home/ksc/dev/rust/procfill/data/
-      command: "node"
-      args: ["server.js"]
+    # - name: "node-server"
+    #   dir: /home/ksc/dev/rust/procfill/data/
+    #   command: "node"
+    #   args: ["server.js"]

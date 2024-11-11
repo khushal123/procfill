@@ -14,24 +14,24 @@ pub struct ProcfillConfig {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct ProcfillOptions {
+pub struct ProcfillOptions {
     save_output: bool,
     run_parallel: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Commands {
-    options: ProcfillOptions,
-    tasks: Vec<ProcfillTask>,
+    pub options: ProcfillOptions,
+    pub tasks: Vec<ProcfillTask>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct ProcfillTask {
-    name: String,
-    command: String,
-    dir: String,
+pub struct ProcfillTask {
+    pub name: String,
+    pub command: String,
+    pub dir: String,
     #[serde(default)] // Make args optional
-    args: Vec<String>,
+    pub args: Vec<String>,
 }
 
 impl ProcfillConfig {
