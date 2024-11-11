@@ -32,6 +32,12 @@ pub struct ProcfillTask {
     pub dir: String,
     #[serde(default)] // Make args optional
     pub args: Vec<String>,
+    #[serde(default)] // Make status optional
+    pub status: String,
+    #[serde(default)] // Make pid optional
+    pub pid: i32,
+    #[serde(default)] // Make output optional
+    pub output: String,
 }
 
 impl ProcfillConfig {

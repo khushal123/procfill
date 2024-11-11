@@ -1,21 +1,24 @@
-use std::process::Command;
+use std::process::{Command, Output};
 
 use crate::tasks::read::ProcfillTask;
 
-fn run_program(program: String, args: Vec<String>) {
+fn run_program(procfil_task: &ProcfillTask) -> Result<Output, anyhow::Error> {
     let output = Command::new("sh")
         .arg("-c")
-        .arg(format!("{} {}", program, args.join(" ")))
+        .arg(format!(
+            "{} {}",
+            procfil_task.command,
+            procfil_task.args.join(" ")
+        ))
         .output()
         .unwrap();
-
-    if output.status.success() {
-        println!("Program ran successfully");
-    } else {
-        println!("Program failed with exit code: {}", output.status);
-    }
+    Ok(output)
 }
 
 pub fn run_task(task: ProcfillTask) {
-    run_program(task.command, task.args);
+    let output = run_program(task.command, task.args);
+    match output {
+        Ok(output) => println!("{}", output.status),
+        Err(e) => println!("{}", e),
+    }
 }
