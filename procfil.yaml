@@ -11,8 +11,18 @@ commands:
   tasks:
     - name: "list"
       command: "ls"
-      dir: /home/ksc/dev/rust/procfill/data/
-      args: ["-lch"]
+      dir: /home/ksc/dev/rust/procfill/
+      args: ["-la"]
+    
+    - name: "echo-test"
+      command: "bash"
+      dir: /home/ksc/dev/rust/procfill/
+      args: ["-c", "for i in {1..5}; do echo 'Test output line '$i; sleep 1; done"]
+    
+    - name: "long-running-task"
+      command: "bash"
+      dir: /home/ksc/dev/rust/procfill/
+      args: ["-c", "while true; do echo 'Long running task is alive at' $(date); sleep 10; done"]
 
     # - name: "node-server"
     #   dir: /home/ksc/dev/rust/procfill/data/

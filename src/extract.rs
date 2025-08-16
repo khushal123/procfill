@@ -9,29 +9,34 @@ pub enum Action {
     LS,
     Error,
 }
-
 impl Action {
     pub fn start_runner(&self, arguments: Vec<String>) {
         match self {
             Action::Help => {
-                println!("Help {}", arguments.len());
+                let help_string = "
+                    --help print all options of the command
+                    start -f filename -> start the processes in the given filename
+                    log -> show the logs
+                    kill -> kill the process
+                    pause -> pause the process
+                    ls -> list all processes
+                ";
+                println!("{}", help_string);
             }
             Action::Start => {
                 commands::start::run(arguments);
             }
             Action::Log => {
-                // commands::kill::run(arguments);
-                println!("Log {}", arguments.len());
+                commands::log::run(arguments);
             }
             Action::Kill => {
-                // commands::kill::run(arguments);
-                println!("Kill {}", arguments.len());
+                commands::kill::run(arguments);
             }
             Action::Pause => {
-                println!("Pause {}", arguments.len());
+                commands::pause::run(arguments);
             }
             Action::LS => {
-                println!("LS {}", arguments.len());
+                commands::ls::run(arguments);
             }
             Action::Error => {
                 println!("Error {}", arguments.len());

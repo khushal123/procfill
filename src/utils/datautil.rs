@@ -1,60 +1,83 @@
-use rusqlite::Connection;
-use std::path;
+use std::{fs, path::PathBuf};
+use std::io::Write;
+use serde::{Serialize, Deserialize};
+use serde_json;
 
-use crate::tasks::read::ProcfillTask;
-use crate::utils;
-pub fn create_tables(data_dir: &str) {
-    let path = path::Path::new(data_dir).join("procfil.db");
-    println!("{}", path.to_string_lossy());
-    let conn: Connection = Connection::open(&path).unwrap();
-    conn.execute(
-        "CREATE TABLE IF NOT EXISTS procfill (
-            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            command TEXT NOT NULL,
-            output TEXT NOT NULL,
-            status TEXT NOT NULL,
-            pid INTEGER NOT NULL,
-            group_id DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-        )",
-        [],
-    )
-    .unwrap();
+use crate::tasks::read::ProcfillConfig;
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ProcessInfo {
+    pub name: String,
+    pub command: String,
+    pub args: Vec<String>,
+    pub dir: String,
+    pub pid: u32,
+    pub status: String,
+    pub master_pid: u32,
 }
 
-pub fn create_process(procfil_task: &ProcfillTask) {
-    let internal_dirs = utils::dirutil::get_internal_dir_paths();
-    let path = path::Path::new(&internal_dirs[1]).join("procfil.db");
-    let conn: Connection = Connection::open(&path).unwrap();
-    let insert = "INSERT INTO procfill (name, command, output, status) VALUES (?, ?, ?, ?, ?)";
-    conn.execute(
-        &insert,
-        (
-            &procfil_task.name,
-            &procfil_task.command,
-            &procfil_task.output,
-            &procfil_task.status,
-            &procfil_task.pid,
-        ),
-    )
-    .unwrap();
+pub fn save_process_info(config: &ProcfillConfig, process_info: &ProcessInfo) -> Result<(), std::io::Error> {
+    let data_dir = PathBuf::from(&config.data_dir);
+    fs::create_dir_all(&data_dir)?;
+    
+    let pid_file = data_dir.join(format!("{}.json", process_info.pid));
+    let json_data = serde_json::to_string_pretty(process_info)?;
+    
+    let mut file = fs::File::create(pid_file)?;
+    file.write_all(json_data.as_bytes())?;
+    
+    Ok(())
 }
 
-pub fn update_process(procfil_task: &ProcfillTask) {
-    let internal_dirs = utils::dirutil::get_internal_dir_paths();
-    let path = path::Path::new(&internal_dirs[1]).join("procfil.db");
-    let conn: Connection = Connection::open(&path).unwrap();
-    let insert =
-        "UPDATE procfill SET name = ?, command = ?, output = ?, status = ?, pid = ? WHERE id = ?";
-    conn.execute(
-        &insert,
-        (
-            &procfil_task.name,
-            &procfil_task.command,
-            &procfil_task.output,
-            &procfil_task.status,
-            &procfil_task.pid,
-        ),
-    )
-    .unwrap();
+pub fn save_process_output(config: &ProcfillConfig, pid: u32, task_name: &str, output: &str) -> Result<(), std::io::Error> {
+    if !config.commands.options.save_output {
+        return Ok(());
+    }
+    
+    let log_dir = PathBuf::from(&config.log_dir);
+    fs::create_dir_all(&log_dir)?;
+    
+    let output_file = log_dir.join(format!("{}_{}.log", task_name, pid));
+    let mut file = fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(output_file)?;
+    
+    let timestamp = chrono::Local::now().format("%Y-%m-%d %H:%M:%S%.3f");
+    writeln!(file, "[{}] {}", timestamp, output)?;
+    Ok(())
+}
+
+pub fn list_processes(config: &ProcfillConfig) -> Result<Vec<ProcessInfo>, std::io::Error> {
+    let data_dir = PathBuf::from(&config.data_dir);
+    let mut processes = Vec::new();
+    
+    if !data_dir.exists() {
+        return Ok(processes);
+    }
+    
+    for entry in fs::read_dir(data_dir)? {
+        let entry = entry?;
+        let path = entry.path();
+        
+        if path.extension().and_then(|s| s.to_str()) == Some("json") {
+            let contents = fs::read_to_string(&path)?;
+            if let Ok(process_info) = serde_json::from_str::<ProcessInfo>(&contents) {
+                processes.push(process_info);
+            }
+        }
+    }
+    
+    Ok(processes)
+}
+
+pub fn remove_process_info(config: &ProcfillConfig, pid: u32) -> Result<(), std::io::Error> {
+    let data_dir = PathBuf::from(&config.data_dir);
+    let pid_file = data_dir.join(format!("{}.json", pid));
+    
+    if pid_file.exists() {
+        fs::remove_file(pid_file)?;
+    }
+    
+    Ok(())
 }

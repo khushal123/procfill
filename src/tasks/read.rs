@@ -4,7 +4,7 @@ use anyhow::Context;
 use serde::{Deserialize, Serialize};
 
 // Use current serde derive macros
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")] // Handles kebab-case YAML keys automatically
 pub struct ProcfillConfig {
     pub config_dir: String,
@@ -13,19 +13,19 @@ pub struct ProcfillConfig {
     pub commands: Commands,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProcfillOptions {
-    save_output: bool,
-    run_parallel: bool,
+    pub save_output: bool,
+    pub run_parallel: bool,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Commands {
     pub options: ProcfillOptions,
     pub tasks: Vec<ProcfillTask>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProcfillTask {
     pub name: String,
     pub command: String,
