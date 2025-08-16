@@ -12,7 +12,7 @@ A lightweight process manager written in Rust that allows you to manage multiple
 - **Parallel Execution**: Run multiple processes concurrently
 - **Directory Management**: Automatically creates required directories
 - **Process Tracking**: Track all processes with PID and status information
-- **Cross-platform**: Works on Linux, macOS, and Windows
+- **Cross-platform**: Right now only works on linux
 
 ## Installation
 
@@ -265,19 +265,6 @@ Procfill uses a multi-threaded architecture:
 3. **Output Capture Threads**: Dedicated threads for capturing stdout/stderr
 4. **Data Persistence**: Process information stored as JSON files
 
-## Comparison with Similar Tools
-
-| Feature | Procfill | PM2 | Supervisor | systemd |
-|---------|----------|-----|------------|---------|
-| Configuration | YAML | JSON/JS | INI | INI |
-| Language | Rust | Node.js | Python | C |
-| Binary Size | ~1.2MB | ~50MB | ~2MB | System |
-| Resource Usage | Low | Medium | Low | Very Low |
-| Learning Curve | Easy | Easy | Medium | Hard |
-| Auto-restart | No* | Yes | Yes | Yes |
-| Clustering | No | Yes | No | No |
-| Web UI | No | Yes | Yes | No |
-
 *Auto-restart planned for future release
 
 ## Troubleshooting
@@ -321,7 +308,7 @@ Procfill uses a multi-threaded architecture:
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions will be open after version 1.0.
 
 ## License
 
